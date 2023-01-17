@@ -1,0 +1,6 @@
+dist
+node_modules
+.parcel-cache
+*.d.ts
+*.js
+*.jsx
