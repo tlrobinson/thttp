@@ -6,47 +6,53 @@ Type-safe full-stack APIs without code-generation. Heavily inspired by [tRPC](ht
 
 ### server.ts
 
-    import { resource, server } from "thttp/server";
-    import http from "http";
+```typescript
+import { resource, server } from "thttp/server";
+import http from "http";
 
-    const api = server({
-      user: resource()
-        .get(({ name }: { name: string }) => ({ uppercased: name.toUpperCase() }))
-    });
+const api = server({
+  user: resource()
+    .get(({ name }: { name: string }) => ({ uppercased: name.toUpperCase() }))
+});
 
-    export type Api = typeof api;
+export type Api = typeof api;
 
-    api.listen(process.env.PORT || 3000);
+api.listen(process.env.PORT || 3000);
+```
 
 ### client.tsx
 
-    // Standalone:
+```typescript
+// Standalone:
 
-    import { createClient } from "thttp/client";
-    import type { Api } from "./server";
+import { createClient } from "thttp/client";
+import type { Api } from "./server";
 
-    const api = createClient<Api>(["/api"]);
+const api = createClient<Api>(["/api"]);
 
-    api.user.get({ name: "foo" }).then(user => console.log(user))
+api.user.get({ name: "foo" }).then(user => console.log(user))
+```
 
-    // ReactQuery:
+```typescript
+// React Query:
 
-    import React from "react";
-    import ReactDOM from "react-dom";
-    import { useQuery, QueryClientProvider, QueryClient } from "react-query";
+import React from "react";
+import ReactDOM from "react-dom";
+import { useQuery, QueryClientProvider, QueryClient } from "react-query";
 
-    function App() {
-      const { data } = api.user.get.useQuery({ name: "foo" });
-      return <pre>{JSON.stringify(data)}</pre>;
-    }
+function App() {
+  const { data } = api.user.get.useQuery({ name: "foo" });
+  return <pre>{JSON.stringify(data)}</pre>;
+}
 
-    const queryClient = new QueryClient();
-    ReactDOM.render(
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>,
-      document.getElementById("root")
-    );
+const queryClient = new QueryClient();
+ReactDOM.render(
+  <QueryClientProvider client={queryClient}>
+    <App />
+  </QueryClientProvider>,
+  document.getElementById("root")
+);
+```
 
 ## TODO
 
